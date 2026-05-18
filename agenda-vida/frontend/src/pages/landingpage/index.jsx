@@ -4,7 +4,6 @@ export default function LandingPage(){
     return(
         <>
         <Header />
-        nigga
         </>
     )
 }
