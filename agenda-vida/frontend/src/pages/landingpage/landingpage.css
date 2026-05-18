@@ -1,0 +1,106 @@
+.hero {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 120px;
+    padding: 60px;
+    background-color: #f5f5f5;
+}
+
+/* Unificado para centralizar todo o bloco do texto e botões */
+.hero-content {
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* Centraliza os blocos filhos horizontalmente */
+    text-align: center;     /* Centraliza o texto em si */
+}
+
+.hero-content h1 {
+    font-size: 72px;
+    font-weight: bold;
+    color: #000;
+    line-height: 1;
+}
+
+.hero-content span {
+    color: #089616;
+    display: block;
+}
+
+.hero-content p {
+    margin-top: 25px;
+    font-size: 22px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* O ajuste mágico está aqui: estilizando a div que você já tem no JSX */
+.hero-buttons {
+    display: flex;
+    flex-direction: column; /* Coloca um botão embaixo do outro */
+    align-items: center;    /* Garante que eles fiquem alinhados no centro */
+    gap: 15px;              /* Espaçamento entre o botão verde e o amarelo */
+    margin-top: 30px;       /* Distância entre o parágrafo e os botões */
+}
+
+.btn-primary,
+.btn-secondary {
+    width: 180px;
+    height: 60px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background-color: #089616;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #066b10;
+}
+
+.btn-secondary {
+    background-color: #FFCF11;
+    color: black;
+}
+
+.btn-secondary:hover {
+    background-color: #e6ba00;
+}
+
+.hero-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mockup {
+    width: 400px;
+    height: 250px;
+    background-color: #d9d9d9;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-weight: bold;
+    font-size: 24px;
+}
+.imagem{
+    width: 400px;
+    border-radius: 20px;
+}
