@@ -8,6 +8,7 @@ export default function LandingPage(){
     return(
         <>
         <Header />
+<<<<<<< HEAD
         <section className="hero">
 
     <div className="hero-content">
@@ -43,6 +44,8 @@ export default function LandingPage(){
     </div>
 
 </section>
+=======
+>>>>>>> b873b9260e6e6de3c8925511ec3e26a7d96389d1
         </>
     )
 }
