@@ -1,18 +1,17 @@
-const express = require("express")
-const User = require("../models/User")
+const express = require("express");
 
-const router = express.Router()
+const router = express.Router();
 
-router.get("/usuarios", async (req, res) => {
-  try {
-    const usuarios = await User.findAll()
+const { listarUsuario, criarUsuario, buscarUsuarioPorId, atualizarUsuario, deletarUsuario } = require("../controllers/userController.js");
 
-    res.json(usuarios)
-  } catch (error) {
-    res.status(500).json({
-      erro: error.message
-    })
-  }
-})
+router.get("/usuarios", listarUsuario);
 
-module.exports = router
+router.post("/usuarios", criarUsuario); 
+
+router.get("/usuarios/:id", buscarUsuarioPorId);
+
+router.put("/usuarios/:id", atualizarUsuario);
+
+router.delete("/usuarios/:id", deletarUsuario);
+
+module.exports = router;
