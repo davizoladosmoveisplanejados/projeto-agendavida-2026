@@ -1,0 +1,103 @@
+.exame-container{
+    min-height: calc(100vh - 90px);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#f5f5f5;
+
+    padding:40px;
+}
+
+.exame-card{
+    width:500px;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    box-shadow:0px 8px 25px rgba(0,0,0,0.1);
+
+    text-align:center;
+}
+
+.exame-card h1{
+    font-size:35px;
+    margin-bottom:10px;
+}
+
+.exame-card p{
+    color:#666;
+    margin-bottom:30px;
+}
+
+.exame-form{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.exame-form input,
+.exame-form textarea{
+    border:none;
+    outline:none;
+
+    background:#f2f2f2;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    font-size:16px;
+}
+
+.exame-form input{
+    height:55px;
+}
+
+.exame-form textarea{
+    resize:none;
+    height:100px;
+}
+
+.exame-form input:focus,
+.exame-form textarea:focus{
+    border:2px solid #089616;
+}
+
+.exame-form button{
+    height:55px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#089616;
+
+    color:white;
+
+    font-size:18px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.exame-form button:hover{
+    background:#066b10;
+}
+.exame-form input[type="date"],
+.exame-form input[type="time"]{
+    background-color: #ededed;
+    color: #5d5d5d;
+}
+
+.exame-form input[type="date"]::-webkit-calendar-picker-indicator,
+.exame-form input[type="time"]::-webkit-calendar-picker-indicator{
+    filter: invert(1);
+    cursor: pointer;
+}
