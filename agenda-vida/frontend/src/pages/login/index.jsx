@@ -1,61 +1,91 @@
+import { useState } from "react";
 import Header from "../../components/header/header";
 import { Link, useNavigate } from "react-router-dom";
+import { useApp } from "../../context/AppContext";
 import "./login.css";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const { login } = useApp();
+  
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
 
-    const navigate = useNavigate();
-
-    function entrar(e){
-        e.preventDefault();
-
-        // depois você coloca validação/API aqui
-
-        navigate("/dashboard");
+  function entrar(e) {
+    e.preventDefault();
+    if (!email || !senha) {
+      setErro("Por favor, preencha o e-mail e a senha.");
+      return;
     }
 
-    return (
-        <>
-            <Header />
+    login(email, senha);
+    navigate("/dashboard");
+  }
 
-            <section className="login-container">
+  function preencherDemo() {
+    setEmail("maria.silva@email.com");
+    setSenha("123456");
+    setErro("");
+  }
 
-                <div className="login-card">
+  return (
+    <>
+      <Header />
 
-                    <h1>Entrar</h1>
+      <main className="login-wrapper">
+        <section className="login-container">
+          <div className="login-card">
+            <div className="login-icon">🔒</div>
+            <h1>Acessar Conta</h1>
+            <p>Entre para gerenciar seus exames e agendamentos</p>
 
-                    <p>
-                        Entre para acessar sua conta
-                    </p>
+            {erro && <div className="auth-error-banner">{erro}</div>}
 
-                    <form className="login-form" onSubmit={entrar}>
+            <form className="login-form" onSubmit={entrar}>
+              <div className="form-group">
+                <label>E-mail</label>
+                <input
+                  type="email"
+                  placeholder="seu.email@exemplo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
 
-                        <input
-                            type="email"
-                            placeholder="Email"
-                        />
+              <div className="form-group">
+                <label>Senha</label>
+                <input
+                  type="password"
+                  placeholder="Sua senha secreta"
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  required
+                />
+              </div>
 
-                        <input
-                            type="password"
-                            placeholder="Senha"
-                        />
+              <button type="submit" className="btn-submit-auth">
+                Entrar na Conta
+              </button>
+            </form>
 
-                        <button type="submit">
-                            Entrar
-                        </button>
+            <div className="demo-box">
+              <p>Quer testar rapidamente?</p>
+              <button type="button" className="btn-demo" onClick={preencherDemo}>
+                Preencher Usuário Demo
+              </button>
+            </div>
 
-                    </form>
-
-                    <div className="cadastro-link">
-                        <p>
-                            Ainda não possui conta?
-                            <Link to="/cadastro"> Cadastrar</Link>
-                        </p>
-                    </div>
-
-                </div>
-
-            </section>
-        </>
-    )
+            <div className="cadastro-link">
+              <p>
+                Ainda não possui conta?
+                <Link to="/cadastro"> Criar Conta Grátis</Link>
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
+  );
 }

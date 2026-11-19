@@ -1,103 +1,100 @@
-.exame-container{
-    min-height: calc(100vh - 90px);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    background:#f5f5f5;
-
-    padding:40px;
+.exame-form-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.exame-card{
-    width:500px;
-
-    background:white;
-
-    padding:40px;
-
-    border-radius:20px;
-
-    box-shadow:0px 8px 25px rgba(0,0,0,0.1);
-
-    text-align:center;
+.exame-card-wizard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 40px 32px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
 }
 
-.exame-card h1{
-    font-size:35px;
-    margin-bottom:10px;
+.exame-card-wizard h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
 }
 
-.exame-card p{
-    color:#666;
-    margin-bottom:30px;
+.exame-card-wizard p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 28px;
 }
 
-.exame-form{
-    display:flex;
-    flex-direction:column;
-    gap:18px;
+.exame-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
 }
 
-.exame-form input,
-.exame-form textarea{
-    border:none;
-    outline:none;
-
-    background:#f2f2f2;
-
-    padding:15px;
-
-    border-radius:12px;
-
-    font-size:16px;
+.form-select-custom {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-.exame-form input{
-    height:55px;
+.form-select-custom:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-.exame-form textarea{
-    resize:none;
-    height:100px;
+.exame-form textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #0f172a;
+  outline: none;
+  resize: vertical;
 }
 
-.exame-form input:focus,
-.exame-form textarea:focus{
-    border:2px solid #089616;
+.exame-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-.exame-form button{
-    height:55px;
-
-    border:none;
-
-    border-radius:12px;
-
-    background:#089616;
-
-    color:white;
-
-    font-size:18px;
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:.3s;
+.info-preparo-snippet {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 0.9rem;
+  color: #1e40af;
 }
 
-.exame-form button:hover{
-    background:#066b10;
-}
-.exame-form input[type="date"],
-.exame-form input[type="time"]{
-    background-color: #ededed;
-    color: #5d5d5d;
+.info-preparo-snippet p {
+  margin-top: 4px;
+  color: #3b82f6;
 }
 
-.exame-form input[type="date"]::-webkit-calendar-picker-indicator,
-.exame-form input[type="time"]::-webkit-calendar-picker-indicator{
-    filter: invert(1);
-    cursor: pointer;
+.wizard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+}
+
+@media (max-width: 640px) {
+  .wizard-actions {
+    flex-direction: column-reverse;
+  }
+
+  .wizard-actions button {
+    width: 100%;
+  }
 }

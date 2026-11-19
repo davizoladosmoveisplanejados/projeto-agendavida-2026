@@ -1,0 +1,156 @@
+.confirmacao-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.confirmacao-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 44px 36px;
+  text-align: center;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+}
+
+.check-animated {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35);
+}
+
+.check-icon-symbol {
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+.confirmacao-card h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.confirmacao-subtitle {
+  color: #64748b;
+  font-size: 1rem;
+  margin-bottom: 32px;
+}
+
+.voucher-card {
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: left;
+  margin-bottom: 32px;
+}
+
+.voucher-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.voucher-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.voucher-code {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: #2563eb;
+  background: #eff6ff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.voucher-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.voucher-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.voucher-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.voucher-value {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.voucher-value.highlight {
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.voucher-preparo {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  color: #92400e;
+  font-size: 0.875rem;
+}
+
+.voucher-preparo p {
+  margin-top: 4px;
+}
+
+.confirmacao-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-link-action {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.btn-link-action:hover {
+  color: #0f172a;
+  text-decoration: underline;
+}
+
+@media print {
+  .main-header, .main-footer, .confirmacao-actions, .confirmacao-subtitle {
+    display: none !important;
+  }
+  .confirmacao-card {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+}
