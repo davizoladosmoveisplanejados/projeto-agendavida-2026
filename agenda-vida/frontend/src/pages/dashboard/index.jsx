@@ -1,25 +1,48 @@
-import Header from "../../components/header/header";
-import { Link } from "react-router-dom";
-import { useApp } from "../../context/AppContext";
-import "./dashboard.css";
+import Header from "../../components/header/header"
+import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext"
+import { useApp } from "../../context/AppContext"
+import "./dashboard.css"
 
 export default function Dashboard() {
-  const { user, agendamentos, cancelAgendamento } = useApp();
+  const { user, logout } = useAuth()
+  const { agendamentos, cancelAgendamento, carregandoAgendamentos } = useApp()
+  const navigate = useNavigate()
 
-  // Find upcoming active appointments
-  const proximos = agendamentos.filter(a => a.status === "Confirmado");
-  const concluidos = agendamentos.filter(a => a.status === "Concluído");
+  // Adapta tanto agendamentos vindos da API (campo status boolean) quanto locais (string)
+  const proximos = agendamentos.filter(a => a.status === true || a.status === "Confirmado")
+  const concluidos = agendamentos.filter(a => a.status === "Concluído")
+  const proximoExame = proximos.length > 0 ? proximos[0] : null
 
-  const proximoExame = proximos.length > 0 ? proximos[0] : null;
+  function handleLogout() {
+    logout()
+    navigate("/login")
+  }
 
   const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    const parts = dateStr.split("-");
-    if (parts.length === 3) {
-      return `${parts[2]}/${parts[1]}/${parts[0]}`;
-    }
-    return dateStr;
-  };
+    if (!dateStr) return ""
+    const parts = String(dateStr).split("-")
+    if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`
+    return dateStr
+  }
+
+  const getNomeExame = (ag) =>
+    ag.nome_exame ||
+    ag.exame ||
+    ag.horario?.exame?.nome_exame ||
+    "Exame"
+
+  const getLocal = (ag) =>
+    ag.local ||
+    ag.horario?.exame?.instituicao?.nome ||
+    "Unidade de saúde"
+
+  const getHora = (ag) =>
+    ag.hora ||
+    (ag.horario?.hora ? String(ag.horario.hora).substring(11, 16) : "—")
+
+  const getDate = (ag) =>
+    ag.data || ag.data_agendamento || ""
 
   return (
     <>
@@ -29,12 +52,21 @@ export default function Dashboard() {
         {/* Welcome Banner */}
         <section className="welcome-banner">
           <div className="welcome-text">
-            <h1>Olá, {user.nome || "Paciente"}! 👋</h1>
+            <h1>Olá, {user?.nome || "Paciente"}! 👋</h1>
             <p>Seja bem-vindo(a) ao seu painel de saúde no AgendaVida.</p>
           </div>
-          <Link to="/exames" className="btn-brand-primary">
-            + Agendar Novo Exame
-          </Link>
+          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <Link to="/exames" className="btn-brand-primary">
+              + Agendar Novo Exame
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="btn-brand-secondary"
+              style={{ whiteSpace: "nowrap" }}
+            >
+              Sair
+            </button>
+          </div>
         </section>
 
         {/* Stats Grid */}
@@ -42,7 +74,7 @@ export default function Dashboard() {
           <div className="dash-stat-card">
             <div className="stat-icon icon-blue">📅</div>
             <div className="stat-info">
-              <h3>{proximos.length}</h3>
+              <h3>{carregandoAgendamentos ? "..." : proximos.length}</h3>
               <p>Próximos Exames</p>
             </div>
           </div>
@@ -50,7 +82,7 @@ export default function Dashboard() {
           <div className="dash-stat-card">
             <div className="stat-icon icon-green">✅</div>
             <div className="stat-info">
-              <h3>{concluidos.length}</h3>
+              <h3>{carregandoAgendamentos ? "..." : concluidos.length}</h3>
               <p>Exames Concluídos</p>
             </div>
           </div>
@@ -58,16 +90,8 @@ export default function Dashboard() {
           <div className="dash-stat-card">
             <div className="stat-icon icon-purple">🏥</div>
             <div className="stat-info">
-              <h3>4</h3>
-              <p>Clínicas Salvas</p>
-            </div>
-          </div>
-
-          <div className="dash-stat-card">
-            <div className="stat-icon icon-orange">🔔</div>
-            <div className="stat-info">
-              <h3>2</h3>
-              <p>Lembretes Pendentes</p>
+              <h3>{agendamentos.length}</h3>
+              <p>Total de Agendamentos</p>
             </div>
           </div>
         </section>
@@ -80,35 +104,34 @@ export default function Dashboard() {
               <Link to="/agendamentos">Ver todos ({agendamentos.length})</Link>
             </div>
 
-            {proximoExame ? (
+            {carregandoAgendamentos ? (
+              <div className="empty-spotlight"><p>Carregando...</p></div>
+            ) : proximoExame ? (
               <div className="spotlight-card">
                 <div className="spotlight-header">
                   <span className="badge-status confirmado">Confirmado</span>
                   <span className="spotlight-date">
-                    📅 {formatDate(proximoExame.data)} às ⏱️ {proximoExame.hora}
+                    📅 {formatDate(getDate(proximoExame))} às ⏱️ {getHora(proximoExame)}
                   </span>
                 </div>
 
                 <div className="spotlight-body">
-                  <h3>{proximoExame.exame}</h3>
+                  <h3>{getNomeExame(proximoExame)}</h3>
                   <div className="spotlight-detail">
-                    <span>🏥 <strong>Local:</strong> {proximoExame.local}</span>
-                    <span>📍 <strong>Endereço:</strong> {proximoExame.endereco}</span>
-                    <span>💳 <strong>Convênio:</strong> {proximoExame.convenio}</span>
+                    <span>🏥 <strong>Local:</strong> {getLocal(proximoExame)}</span>
+                    {proximoExame.preparo && (
+                      <div className="preparo-box">
+                        <strong>⚠️ Recomendações de Preparo:</strong>
+                        <p>{proximoExame.preparo}</p>
+                      </div>
+                    )}
                   </div>
-
-                  {proximoExame.preparo && (
-                    <div className="preparo-box">
-                      <strong>⚠️ Recomendações de Preparo:</strong>
-                      <p>{proximoExame.preparo}</p>
-                    </div>
-                  )}
                 </div>
 
                 <div className="spotlight-actions">
-                  <button 
+                  <button
                     className="btn-cancel-outline"
-                    onClick={() => cancelAgendamento(proximoExame.id)}
+                    onClick={() => cancelAgendamento(proximoExame.id_agendamento || proximoExame.id)}
                   >
                     Cancelar Agendamento
                   </button>
@@ -129,7 +152,7 @@ export default function Dashboard() {
             )}
           </div>
 
-          {/* Quick Actions & Recent */}
+          {/* Quick Actions */}
           <div className="side-panel">
             <div className="quick-actions-card">
               <h3>Ações Rápidas</h3>
@@ -170,5 +193,5 @@ export default function Dashboard() {
         </section>
       </main>
     </>
-  );
+  )
 }

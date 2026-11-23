@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const { autenticar, apenasInstituicao } = require("../middlewares/authMiddleware")
 
 const {
   listarInstituicoes,
@@ -9,10 +10,13 @@ const {
   deletarInstituicaoCtrl,
 } = require("../controllers/instituicaoController.js")
 
+// Listar e buscar: público
 router.get("/instituicoes", listarInstituicoes)
-router.post("/instituicoes", criarInstituicaoCtrl)
 router.get("/instituicoes/:id", buscarInstituicaoPorIdCtrl)
-router.put("/instituicoes/:id", atualizarInstituicaoCtrl)
-router.delete("/instituicoes/:id", deletarInstituicaoCtrl)
+
+// Criar/editar/deletar: apenas instituição autenticada
+router.post("/instituicoes", autenticar, apenasInstituicao, criarInstituicaoCtrl)
+router.put("/instituicoes/:id", autenticar, apenasInstituicao, atualizarInstituicaoCtrl)
+router.delete("/instituicoes/:id", autenticar, apenasInstituicao, deletarInstituicaoCtrl)
 
 module.exports = router

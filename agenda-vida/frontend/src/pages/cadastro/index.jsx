@@ -1,35 +1,48 @@
-import { useState } from "react";
-import Header from "../../components/header/header";
-import { Link, useNavigate } from "react-router-dom";
-import { useApp } from "../../context/AppContext";
-import "./cadastro.css";
+import { useState } from "react"
+import Header from "../../components/header/header"
+import { Link, useNavigate } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext"
+import "./cadastro.css"
 
 export default function Cadastro() {
-  const navigate = useNavigate();
-  const { register } = useApp();
+  const navigate = useNavigate()
+  const { registrarCliente, carregando } = useAuth()
 
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [senha, setSenha] = useState("");
-  const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [erro, setErro] = useState("");
+  const [nome, setNome] = useState("")
+  const [email, setEmail] = useState("")
+  const [cpf, setCpf] = useState("")
+  const [telefone, setTelefone] = useState("")
+  const [senha, setSenha] = useState("")
+  const [confirmarSenha, setConfirmarSenha] = useState("")
+  const [erro, setErro] = useState("")
 
-  function cadastrar(e) {
-    e.preventDefault();
+  async function cadastrar(e) {
+    e.preventDefault()
+    setErro("")
+
     if (!nome || !email || !senha) {
-      setErro("Por favor, preencha os campos obrigatórios.");
-      return;
+      setErro("Por favor, preencha os campos obrigatórios.")
+      return
     }
 
     if (senha !== confirmarSenha) {
-      setErro("As senhas não coincidem.");
-      return;
+      setErro("As senhas não coincidem.")
+      return
     }
 
-    register({ nome, email, cpf, telefone });
-    navigate("/dashboard");
+    if (senha.length < 6) {
+      setErro("A senha deve ter no mínimo 6 caracteres.")
+      return
+    }
+
+    const resultado = await registrarCliente({ nome, email, cpf, telefone, senha })
+
+    if (!resultado.sucesso) {
+      setErro(resultado.erro)
+      return
+    }
+
+    navigate("/dashboard")
   }
 
   return (
@@ -40,7 +53,7 @@ export default function Cadastro() {
         <section className="cadastro-container">
           <div className="cadastro-card">
             <div className="cadastro-icon">📝</div>
-            <h1>Criar Conta</h1>
+            <h1>Criar Conta de Paciente</h1>
             <p>Preencha seus dados para começar a usar o AgendaVida</p>
 
             {erro && <div className="auth-error-banner">{erro}</div>}
@@ -114,20 +127,22 @@ export default function Cadastro() {
                 </div>
               </div>
 
-              <button type="submit" className="btn-submit-auth">
-                Cadastrar e Acessar
+              <button type="submit" className="btn-submit-auth" disabled={carregando}>
+                {carregando ? "Criando conta..." : "Cadastrar e Acessar"}
               </button>
             </form>
 
             <div className="login-link">
               <p>
-                Já possui uma conta?
-                <Link to="/login"> Fazer Login</Link>
+                Já possui uma conta? <Link to="/login">Fazer Login</Link>
+              </p>
+              <p>
+                É uma instituição? <Link to="/cadastro/instituicao">Cadastrar Instituição</Link>
               </p>
             </div>
           </div>
         </section>
       </main>
     </>
-  );
+  )
 }

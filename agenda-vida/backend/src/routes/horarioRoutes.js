@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const { autenticar, apenasInstituicao } = require("../middlewares/authMiddleware")
 
 const {
   listarHorarios,
@@ -10,12 +11,14 @@ const {
   deletarHorarioCtrl,
 } = require("../controllers/horarioController.js")
 
+// Consultas públicas de horário
 router.get("/horarios", listarHorarios)
-router.post("/horarios", criarHorarioCtrl)
 router.get("/horarios/:id", buscarHorarioPorIdCtrl)
-// Listar horários disponíveis de um exame específico
 router.get("/exames/:id_exame/horarios/disponiveis", listarHorariosDisponiveisCtrl)
-router.put("/horarios/:id", atualizarHorarioCtrl)
-router.delete("/horarios/:id", deletarHorarioCtrl)
+
+// Criar/editar/deletar horários: apenas instituição
+router.post("/horarios", autenticar, apenasInstituicao, criarHorarioCtrl)
+router.put("/horarios/:id", autenticar, apenasInstituicao, atualizarHorarioCtrl)
+router.delete("/horarios/:id", autenticar, apenasInstituicao, deletarHorarioCtrl)
 
 module.exports = router

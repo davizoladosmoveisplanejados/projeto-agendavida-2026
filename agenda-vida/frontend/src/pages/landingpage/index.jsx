@@ -1,11 +1,11 @@
 import Header from "../../components/header/header";
 import { Link } from "react-router-dom";
-import { useApp } from "../../context/AppContext";
+import { useAuth } from "../../context/AuthContext";
 import "./landingpage.css";
 import Imagem from '../../assets/logo1.png';
 
 export default function LandingPage() {
-  const { user } = useApp();
+  const { isLoggedIn } = useAuth();
 
   return (
     <>
@@ -20,23 +20,23 @@ export default function LandingPage() {
             </h1>
 
             <p>
-              Agende exames laboratoriais e de imagem em clínicas parceiras, 
+              Agende exames laboratoriais e de imagem em clínicas parceiras,
               acompanhe prazos e mantenha seu histórico médico em um único lugar.
             </p>
 
             <div className="hero-buttons">
-              <Link 
-                to={user.isLoggedIn ? "/exames" : "/cadastro"} 
+              <Link
+                to={isLoggedIn ? "/exames" : "/cadastro"}
                 className="btn-primary-landing"
               >
-                {user.isLoggedIn ? "Agendar Exame Agora" : "Criar Conta Grátis"}
+                {isLoggedIn ? "Agendar Exame Agora" : "Criar Conta Grátis"}
               </Link>
 
-              <Link 
-                to={user.isLoggedIn ? "/dashboard" : "/login"} 
+              <Link
+                to={isLoggedIn ? "/dashboard" : "/login"}
                 className="btn-secondary-landing"
               >
-                {user.isLoggedIn ? "Acessar Meu Painel" : "Já possuo uma conta"}
+                {isLoggedIn ? "Acessar Meu Painel" : "Já possuo uma conta"}
               </Link>
             </div>
           </div>

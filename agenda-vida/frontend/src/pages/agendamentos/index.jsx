@@ -1,49 +1,80 @@
-import { useState } from "react";
-import Header from "../../components/header/header";
-import { Link } from "react-router-dom";
-import { useApp } from "../../context/AppContext";
-import "./agendamentos.css";
+import { useState } from "react"
+import Header from "../../components/header/header"
+import { Link } from "react-router-dom"
+import { useApp } from "../../context/AppContext"
+import "./agendamentos.css"
 
 export default function Agendamentos() {
-  const { agendamentos, cancelAgendamento } = useApp();
-  const [activeTab, setActiveTab] = useState("Todos");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [expandedId, setExpandedId] = useState(null);
-  const [cancelingId, setCancelingId] = useState(null);
+  const { agendamentos, cancelAgendamento, carregandoAgendamentos } = useApp()
+  const [activeTab, setActiveTab] = useState("Todos")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [expandedId, setExpandedId] = useState(null)
+  const [cancelingId, setCancelingId] = useState(null)
 
   const formatDate = (dateStr) => {
-    if (!dateStr) return "";
-    const parts = dateStr.split("-");
-    if (parts.length === 3) {
-      return `${parts[2]}/${parts[1]}/${parts[0]}`;
-    }
-    return dateStr;
-  };
+    if (!dateStr) return ""
+    const parts = String(dateStr).split("-")
+    if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`
+    return dateStr
+  }
+
+  // Adapta tanto agendamentos da API (status boolean) quanto os mock (string)
+  const getStatus = (ag) => {
+    if (ag.status === true) return "Confirmado"
+    if (ag.status === false) return "Cancelado"
+    return ag.status || "Confirmado"
+  }
+
+  const getNomeExame = (ag) =>
+    ag.nome_exame ||
+    ag.exame ||
+    ag.horario?.exame?.nome_exame ||
+    "Exame"
+
+  const getLocal = (ag) =>
+    ag.local ||
+    ag.horario?.exame?.instituicao?.nome ||
+    "—"
+
+  const getEndereco = (ag) =>
+    ag.endereco ||
+    ag.horario?.exame?.instituicao?.endereco ||
+    "—"
+
+  const getId = (ag) =>
+    ag.id_agendamento || ag.id || Math.random()
+
+  const getHora = (ag) =>
+    ag.hora ||
+    (ag.horario?.hora ? String(ag.horario.hora).substring(11, 16) : "—")
+
+  const getDate = (ag) =>
+    ag.data || ag.data_agendamento || ""
 
   const filteredAgendamentos = agendamentos.filter((item) => {
-    // Tab filter
-    if (activeTab === "Próximos" && item.status !== "Confirmado") return false;
-    if (activeTab === "Concluídos" && item.status !== "Concluído") return false;
-    if (activeTab === "Cancelados" && item.status !== "Cancelado") return false;
+    const status = getStatus(item)
+    if (activeTab === "Próximos" && status !== "Confirmado") return false
+    if (activeTab === "Concluídos" && status !== "Concluído") return false
+    if (activeTab === "Cancelados" && status !== "Cancelado") return false
 
-    // Search filter
     if (searchTerm.trim() !== "") {
-      const term = searchTerm.toLowerCase();
-      const matchExame = item.exame.toLowerCase().includes(term);
-      const matchLocal = item.local.toLowerCase().includes(term);
-      const matchId = item.id.toLowerCase().includes(term);
-      return matchExame || matchLocal || matchId;
+      const term = searchTerm.toLowerCase()
+      return (
+        getNomeExame(item).toLowerCase().includes(term) ||
+        getLocal(item).toLowerCase().includes(term) ||
+        String(getId(item)).toLowerCase().includes(term)
+      )
     }
 
-    return true;
-  });
+    return true
+  })
 
   const confirmCancel = () => {
-    if (cancelingId) {
-      cancelAgendamento(cancelingId);
-      setCancelingId(null);
+    if (cancelingId !== null) {
+      cancelAgendamento(cancelingId)
+      setCancelingId(null)
     }
-  };
+  }
 
   return (
     <>
@@ -85,60 +116,63 @@ export default function Agendamentos() {
           </div>
         </div>
 
-        {/* Agendamentos List */}
-        {filteredAgendamentos.length > 0 ? (
+        {carregandoAgendamentos ? (
+          <div style={{ textAlign: "center", padding: "48px", color: "#6b7280" }}>
+            Carregando seus agendamentos...
+          </div>
+        ) : filteredAgendamentos.length > 0 ? (
           <div className="agendamentos-list">
             {filteredAgendamentos.map((item) => {
-              const isExpanded = expandedId === item.id;
-              const statusClass = item.status ? item.status.toLowerCase() : "confirmado";
+              const id = getId(item)
+              const isExpanded = expandedId === id
+              const status = getStatus(item)
+              const statusClass = status.toLowerCase().replace("í", "i")
 
               return (
-                <div key={item.id} className="agendamento-card">
+                <div key={id} className="agendamento-card">
                   <div className="agendamento-card-header">
                     <div className="card-header-left">
-                      <span className="agendamento-code">{item.id}</span>
-                      <span className={`badge-status ${statusClass}`}>
-                        {item.status}
-                      </span>
+                      <span className="agendamento-code">#{id}</span>
+                      <span className={`badge-status ${statusClass}`}>{status}</span>
                     </div>
-
                     <div className="card-header-right">
                       <span className="date-badge">
-                        📅 {formatDate(item.data)} às ⏱️ {item.hora}
+                        📅 {formatDate(getDate(item))} às ⏱️ {getHora(item)}
                       </span>
                     </div>
                   </div>
 
                   <div className="agendamento-card-body">
-                    <h3>{item.exame}</h3>
-                    
+                    <h3>{getNomeExame(item)}</h3>
+
                     <div className="info-grid">
                       <div className="info-item">
                         <span className="info-label">🏥 Local</span>
-                        <span className="info-value">{item.local}</span>
+                        <span className="info-value">{getLocal(item)}</span>
                       </div>
 
                       <div className="info-item">
                         <span className="info-label">📍 Endereço</span>
-                        <span className="info-value">{item.endereco}</span>
+                        <span className="info-value">{getEndereco(item)}</span>
                       </div>
 
-                      <div className="info-item">
-                        <span className="info-label">💳 Convênio</span>
-                        <span className="info-value">{item.convenio}</span>
-                      </div>
+                      {item.convenio && (
+                        <div className="info-item">
+                          <span className="info-label">💳 Convênio</span>
+                          <span className="info-value">{item.convenio}</span>
+                        </div>
+                      )}
                     </div>
 
-                    {isExpanded && (
+                    {isExpanded && item.preparo && (
                       <div className="expanded-details">
                         <div className="detail-block">
-                          <strong>📋 Recomendações e Preparo Pré-Exame:</strong>
-                          <p>{item.preparo || "Nenhuma recomendação especial."}</p>
+                          <strong>📋 Recomendações de Preparo:</strong>
+                          <p>{item.preparo}</p>
                         </div>
-
                         {item.observacoes && (
                           <div className="detail-block">
-                            <strong>📝 Observações Médicas:</strong>
+                            <strong>📝 Observações:</strong>
                             <p>{item.observacoes}</p>
                           </div>
                         )}
@@ -147,35 +181,28 @@ export default function Agendamentos() {
                   </div>
 
                   <div className="agendamento-card-footer">
-                    <button
-                      className="btn-toggle-details"
-                      onClick={() => setExpandedId(isExpanded ? null : item.id)}
-                    >
-                      {isExpanded ? "▲ Ocultar Preparo" : "▼ Ver Instruções de Preparo"}
-                    </button>
+                    {item.preparo && (
+                      <button
+                        className="btn-toggle-details"
+                        onClick={() => setExpandedId(isExpanded ? null : id)}
+                      >
+                        {isExpanded ? "▲ Ocultar Preparo" : "▼ Ver Instruções de Preparo"}
+                      </button>
+                    )}
 
                     <div className="footer-action-buttons">
-                      {item.status === "Confirmado" && (
+                      {status === "Confirmado" && (
                         <button
                           className="btn-cancel"
-                          onClick={() => setCancelingId(item.id)}
+                          onClick={() => setCancelingId(id)}
                         >
                           Cancelar
-                        </button>
-                      )}
-
-                      {item.status === "Concluído" && (
-                        <button
-                          className="btn-results"
-                          onClick={() => alert(`Visualizando resultado online do exame ${item.exame}`)}
-                        >
-                          📄 Baixar Resultado (PDF)
                         </button>
                       )}
                     </div>
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         ) : (
@@ -183,8 +210,8 @@ export default function Agendamentos() {
             <div className="empty-icon">📁</div>
             <h3>Nenhum agendamento encontrado</h3>
             <p>
-              {searchTerm 
-                ? `Nenhum resultado para "${searchTerm}". Tente buscar por outros termos.`
+              {searchTerm
+                ? `Nenhum resultado para "${searchTerm}".`
                 : `Não há agendamentos na categoria "${activeTab}".`}
             </p>
             <Link to="/exames" className="btn-brand-primary" style={{ marginTop: '16px' }}>
@@ -194,17 +221,14 @@ export default function Agendamentos() {
         )}
 
         {/* Modal Confirm Cancel */}
-        {cancelingId && (
+        {cancelingId !== null && (
           <div className="modal-backdrop">
             <div className="modal-card">
               <h3>Confirmar Cancelamento</h3>
-              <p>Tem certeza de que deseja cancelar este agendamento? Esta ação não pode ser desfeita.</p>
+              <p>Tem certeza de que deseja cancelar este agendamento?</p>
 
               <div className="modal-buttons">
-                <button
-                  className="btn-brand-secondary"
-                  onClick={() => setCancelingId(null)}
-                >
+                <button className="btn-brand-secondary" onClick={() => setCancelingId(null)}>
                   Manter Agendamento
                 </button>
                 <button className="btn-danger-confirm" onClick={confirmCancel}>
@@ -216,5 +240,5 @@ export default function Agendamentos() {
         )}
       </main>
     </>
-  );
+  )
 }

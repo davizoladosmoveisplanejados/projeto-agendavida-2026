@@ -1,0 +1,112 @@
+/* Painel da Instituição — estilos */
+
+.painel-page {
+  padding: 24px 16px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.painel-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0 16px;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 4px;
+}
+
+.painel-tabs .tab-btn {
+  padding: 8px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #6b7280;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -6px;
+  transition: all 0.2s;
+}
+
+.painel-tabs .tab-btn.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  font-weight: 600;
+}
+
+.painel-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.painel-section h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #111827;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.painel-table-wrapper {
+  overflow-x: auto;
+}
+
+.painel-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.painel-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 600;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.painel-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+}
+
+.painel-table tr:hover td {
+  background: #f9fafb;
+}
+
+.empty-msg {
+  color: #9ca3af;
+  text-align: center;
+  padding: 32px 0;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 48px;
+  color: #6b7280;
+}
+
+.btn-logout {
+  padding: 10px 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-logout:hover {
+  background: #dc2626;
+}
+
+.icon-red { background: #fee2e2; color: #ef4444; }

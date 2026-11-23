@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const { autenticar, apenasInstituicao } = require("../middlewares/authMiddleware")
 
 const {
   listarAgendamentos,
@@ -10,14 +11,28 @@ const {
   reagendarAgendamentoCtrl,
 } = require("../controllers/agendamentoController.js")
 
-router.get("/agendamentos", listarAgendamentos)
-router.post("/agendamentos", criarAgendamentoCtrl)
-router.get("/agendamentos/:id", buscarAgendamentoPorIdCtrl)
-// Histórico de agendamentos de um usuário específico
-router.get("/usuarios/:id_usuario/agendamentos", listarAgendamentosDoUsuario)
+// Apenas instituição vê todos os agendamentos
+router.get("/agendamentos", autenticar, apenasInstituicao, listarAgendamentos)
+
+// Criar agendamento (apenas clientes autenticados)
+router.post("/agendamentos", autenticar, criarAgendamentoCtrl)
+
+// Buscar agendamento por id
+router.get("/agendamentos/:id", autenticar, buscarAgendamentoPorIdCtrl)
+
+// Histórico de agendamentos do próprio usuário autenticado
+router.get("/meus-agendamentos", autenticar, (req, res, next) => {
+  req.params.id_usuario = req.user.id
+  next()
+}, listarAgendamentosDoUsuario)
+
+// Histórico de agendamentos por usuário (admin/instituição)
+router.get("/usuarios/:id_usuario/agendamentos", autenticar, apenasInstituicao, listarAgendamentosDoUsuario)
+
 // Cancelar agendamento
-router.patch("/agendamentos/:id/cancelar", cancelarAgendamentoCtrl)
-// Reagendar (enviar novoId_horario no body)
-router.patch("/agendamentos/:id/reagendar", reagendarAgendamentoCtrl)
+router.patch("/agendamentos/:id/cancelar", autenticar, cancelarAgendamentoCtrl)
+
+// Reagendar
+router.patch("/agendamentos/:id/reagendar", autenticar, reagendarAgendamentoCtrl)
 
 module.exports = router
